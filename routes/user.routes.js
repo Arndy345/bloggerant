@@ -7,18 +7,6 @@ const userRouter = require("express").Router();
 
 userRouter.get("/users", userController.getUsers);
 
-// userRouter.post("/signup", async (req, res) => {
-// 	const { firstName, lastName, email, passWord } =
-// 		req.body;
-// 	const user = await userModel.create({
-// 		firstName,
-// 		lastName,
-// 		email,
-// 		passWord,
-// 	});
-// 	console.log(user);
-// 	res.send(user);
-// });
 userRouter.post(
 	"/signup",
 	passport.authenticate("signup", {
@@ -38,7 +26,6 @@ userRouter.post("/login", (req, res, next) => {
 		async (err, user, info) => {
 			try {
 				if (err || !user) {
-					// console.log(err);
 					const error = new Error(
 						"Wrong email/password"
 					);
@@ -68,7 +55,7 @@ userRouter.post("/login", (req, res, next) => {
 					}
 				);
 			} catch (error) {
-				return next(error);
+				next(error);
 			}
 		}
 	)(req, res, next);

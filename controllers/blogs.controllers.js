@@ -113,41 +113,26 @@ const getBlog = async (req, res) => {
 };
 
 const getBlogById = async (req, res) => {
-	const { params } = req;
-	const { id } = params;
-	const queryParam = {};
-
-	if (id) queryParam._id = id;
+	const { id } = req.params;
 
 	try {
-		const blog = await Blogs.findOne(
-			queryParam
+		const blog = await Blogs.findOneAndUpdate(
+			{ _id: id, state: "published" },
+			{ $inc: { readCount: 1 } },
+			{ new: true }
 		).populate({
 			path: "author",
-			select: "firstName lastName -_id",
+			select: "-email -blogs",
 		});
-
 		if (!blog) {
-			res.status(404).send({ status: false });
-			return;
-		}
-
-		if (blog.state !== "published") {
 			res.status(404);
-			res.json({
-				status: false,
-				message: "NOT FOUND",
-			});
+			res.json({ status: false });
 			return;
 		}
-		blog.readCount = blog.readCount + 1;
-		await blog.save();
-
 		res.status(200);
-		res.json({ status: true, blog });
+		res.json(blog);
 		return;
 	} catch (err) {
-		// console.log(err);
 		res.status(400);
 		res.json({ status: false });
 		return;
@@ -157,6 +142,7 @@ const newBlog = async (req, res) => {
 	const body = req.body;
 
 	const author = req.user.id;
+
 	body.author = author;
 
 	const wordCount = body.body.split(" ").length;
@@ -181,41 +167,39 @@ const newBlog = async (req, res) => {
 //WORK ON THIS
 const editBlog = async (req, res) => {
 	const { id } = req.params;
-	const { title } = req.query;
-	const author = req.user.id;
-	const { body } = req.body;
-	let blog;
-	if (title) {
-		blog = await Blogs.find({ title });
-	}
-	blog = await Blogs.findById(id);
-	const blogId = blog.author.valueOf();
-	if (author === blogId) {
-		blog.body = body;
-		blog.save();
-		res.send(blog);
-	} else {
-		res.status(401).send("Unauthorized");
-	}
+	const { title, description, body } = req.body;
+
+	await Blogs.findByIdAndUpdate(
+		{ _id: id },
+		{ title, description, body },
+		{ new: true }
+	);
+	return res.status(201).json({
+		message: "Blog successfully updated",
+	});
 };
 
 const updateState = async (req, res) => {
 	const { id } = req.params;
-
-	const author = req.user.id;
 	try {
-		const blog = await Blogs.findById(id);
-
-		const blogId = blog.author.valueOf();
-		if (blogId === author) {
-			blog.state = "published";
-			blog.save();
-			res
-				.status(200)
-				.json({ status: true, blog });
-		} else {
-			res.status(401).send("Unauthorized");
+		const blog = await Blogs.findOneAndUpdate(
+			{
+				_id: id,
+				state: "draft",
+			},
+			{ $set: { state: "published" } },
+			{ new: true }
+		).select("state title description -_id");
+		if (!blog) {
+			res.status(400);
+			res.send("Blog published already");
+			return;
 		}
+
+		res.status(200).json({
+			message: "Blog state successfully updated",
+			blog,
+		});
 	} catch (err) {
 		res.status(400);
 		res.json({
@@ -228,44 +212,47 @@ const updateState = async (req, res) => {
 
 const deleteBlog = async (req, res) => {
 	const { id } = req.params;
-	const author = req.user.id;
+
 	try {
-		const blog = await Blogs.findById(id);
-		// console.log(blog);
-
-		const blogId = blog.author.valueOf();
-
-		if (author === blogId) {
-			Blogs.deleteOne(
-				{ _id: id },
-				function (err) {
-					if (err) return res.send(err);
-					res.status(200);
-					res.json({
-						status: true,
-						message: "Deleted",
-					});
-				}
-			);
-			return;
-		} else {
-			res.status(401);
+		Blogs.deleteOne({ _id: id }, function (err) {
+			if (err) return res.send(err);
+			res.status(200);
 			res.json({
-				status: false,
-				message: "Unauthorized",
+				status: true,
+				message: "Deleted",
 			});
-			return;
-		}
+		});
+		return;
 	} catch (error) {
-		// console.log("here");
 		res.status(400).send("Bad request");
 		return;
 	}
 };
+const getMyBlogById = async (req, res) => {
+	const { id } = req.params;
+	try {
+		const blog = await Blogs.findOneAndUpdate(
+			{ _id: id },
+			{ $inc: { readCount: 1 } },
+			{ new: true }
+		);
+		if (!blog) {
+			res.status(404);
+			res.json({ status: false });
+			return;
+		}
 
+		res.status(200);
+		res.json({ status: true, blog });
+		return;
+	} catch (err) {
+		res.status(400);
+		res.json({ status: false });
+		return;
+	}
+};
 const getMyBlogs = async (req, res) => {
 	const author = req.user.id;
-	// console.log(author);
 	const _id = mongoose.Types.ObjectId(author);
 	const { state, page, sortBy, orderBy } =
 		req.query;
@@ -285,7 +272,7 @@ const getMyBlogs = async (req, res) => {
 		).populate({
 			path: "blogs",
 			match: { state },
-			select: "title description -_id",
+			select: "title description _id author",
 			options: {
 				limit: limit,
 				skip: blogsPerPage,
@@ -319,6 +306,7 @@ module.exports = {
 	updateState,
 	deleteBlog,
 	getMyBlogs,
+	getMyBlogById,
 	getBlog,
 	getAllBlogs,
 	editBlog,

@@ -26,6 +26,7 @@ const generateToken = async () => {
 			expect(res.status).toBe(200);
 			token = res.body.token;
 		});
+	console.log(token);
 	return token;
 };
 const createBlog = async () => {
@@ -81,6 +82,7 @@ beforeAll(async () => {
 
 	id = user._id;
 });
+
 describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 	test("Tests login route and returns a user token", async () => {
 		const userDetails = {
@@ -223,20 +225,6 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 	});
 
 	test("gets blogs of a particular user", async () => {
-		const page = 3;
-		const state = "published";
-		const orderBy = "asc";
-		const sortBy = "timestamps";
-		const response = await api
-			.get(
-				`/blogs/myblogs/?${page}&${state}&${orderBy}&${sortBy}`
-			)
-			.set("Authorization", `Bearer ${token}`)
-			.expect(200);
-
-		expect(response.body).toBeDefined();
-	});
-	test("gets blogs of a particular user", async () => {
 		// await generateToken();
 		// console.log(token);
 		const page = 3;
@@ -251,6 +239,21 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 			.expect(200);
 
 		expect(response.body).toBeDefined();
+	});
+	test("MY BLOG BY ID", async () => {
+		// const queryParam = { state: "published" };
+		const token = await generateToken;
+		const blog = await createBlog();
+		const result = await api
+			.get(`/blogs/myblog/${blog._id}`)
+			.set("Authorization", `Bearer ${token}`)
+			.expect(200)
+			.expect(
+				"Content-Type",
+				/application\/json/
+			);
+
+		expect(result.body.status).toBe(true);
 	});
 	test("tries to get blogs of user with no blogs created", async () => {
 		let token = await generateToken();
@@ -271,14 +274,14 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 	});
 
 	test("FAILS TO GET BLOGS AS WRONG TOKEN IS PASSED ", async () => {
-		// login("nonso1");
-		const token = "ndkehlwejknjkdjkwj";
+		const token = await generateToken();
+		// console.log(token);
 		const page = 3;
 		const response = await api
 			.get(`/blogs/myblogs/?${page}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(401);
-		// console.log(response.body);
+
 		expect(response.body).toEqual({});
 	});
 
@@ -292,6 +295,9 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 			.set("Authorization", `Bearer ${token}`)
 			.expect(200);
 
+		expect(response.body.message).toBe(
+			"Blog state successfully updated"
+		);
 		expect(response.body.blog.state).toBe(
 			"published"
 		);

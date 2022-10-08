@@ -1,55 +1,38 @@
 const blogRouter = require("express").Router();
 require("../authentication/passport");
 const passport = require("passport");
-
+const authorize = require("../authentication/authorize");
 const blogController = require("../controllers/blogs.controllers");
 
-blogRouter.get(
-	"/:id",
-	blogController.getBlogById
-);
-blogRouter.get("/", blogController.getAllBlogs);
-blogRouter.get(
-	"/getblog",
-	blogController.getBlog
-);
+blogRouter
+	.route("/")
+	.get(blogController.getAllBlogs);
+blogRouter
+	.route("/getblog")
+	.get(blogController.getBlog);
+blogRouter
+	.route("/:id")
+	.get(blogController.getBlogById);
 
-blogRouter.post(
+blogRouter.use(
 	"/",
 	passport.authenticate("jwt", {
 		session: false,
-	}),
-	blogController.newBlog
-);
-blogRouter.patch(
-	"/editblog/:id",
-	passport.authenticate("jwt", {
-		session: false,
-	}),
-	blogController.editBlog
+	})
 );
 
-blogRouter.patch(
-	"/:id",
-	passport.authenticate("jwt", {
-		session: false,
-	}),
-	blogController.updateState
-);
+blogRouter.use("/myblogs/:id", authorize);
+blogRouter
+	.route("/")
+	.post(blogController.newBlog);
+blogRouter
+	.route("/myblogs")
+	.get(blogController.getMyBlogs);
+blogRouter
+	.route("/myblogs/:id")
+	.get(blogController.getMyBlogById)
+	.put(blogController.editBlog)
+	.patch(blogController.updateState)
+	.delete(blogController.deleteBlog);
 
-blogRouter.delete(
-	"/:id",
-	passport.authenticate("jwt", {
-		session: false,
-	}),
-	blogController.deleteBlog
-);
-
-blogRouter.get(
-	"/myblogs",
-	passport.authenticate("jwt", {
-		session: false,
-	}),
-	blogController.getMyBlogs
-);
 module.exports = blogRouter;
