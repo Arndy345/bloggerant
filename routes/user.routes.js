@@ -9,7 +9,7 @@ const userRouter = require("express").Router();
 
 userRouter.get("/", userController.getUsers);
 
-userRouter.post("/", async (req, res) => {
+userRouter.post("/signup", async (req, res) => {
 	const { firstName, lastName, email, passWord } =
 		req.body;
 	const user = await userModel.create({
@@ -19,7 +19,7 @@ userRouter.post("/", async (req, res) => {
 		passWord,
 	});
 	console.log(user);
-	res.send("Successful");
+	res.send(user);
 });
 userRouter.post(
 	"/signup",
@@ -55,11 +55,12 @@ userRouter.post("/login", (req, res, next) => {
 
 						const body = {
 							_id: user._id,
-							userName: user.userName,
+							email: user.email,
 						};
 						const token = jwt.sign(
 							{ user: body },
-							process.env.JWT_SECRET
+							process.env.JWT_SECRET,
+							{ expiresIn: "1h" }
 						);
 
 						return res.json({ token });
