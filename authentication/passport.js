@@ -53,6 +53,7 @@ passport.use(
 				const user = await User.findOne({
 					email,
 				});
+				// console.log(user);
 
 				if (!user) {
 					return done(null, false, {
@@ -62,11 +63,7 @@ passport.use(
 
 				const validate =
 					await user.comparePasswords(passWord);
-				// 	(await user.passWord) === passWord
-				// 		? true
-				// 		: false;
 				// console.log(validate);
-
 				if (!validate) {
 					return done(null, false, {
 						message: "Wrong Password",
@@ -91,12 +88,13 @@ passport.use(
 				ExtractJWT.fromAuthHeaderAsBearerToken(),
 		},
 		async (token, done) => {
-			console.log(token);
+			// console.log(token.user);
 			try {
 				const user = await User.findById(
-					token.id
+					token.user
 				);
 				if (user) {
+					// console.log(user, "hello");
 					return done(null, user);
 				}
 				return done(null, false);
