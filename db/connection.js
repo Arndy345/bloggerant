@@ -9,17 +9,23 @@ const MONGODB_URI =
 	process.env.NODE_ENV === "test"
 		? process.env.TEST_MONGODB_URI
 		: process.env.MONGODB_URI;
-mongoose.connect(MONGODB_URI);
+const connectDB = async () => {
+	await mongoose
+		.connect(MONGODB_URI, {
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+		})
+		.then((conn) => {
+			console.log(
+				`Conected to Mongo! Database name: ${conn.connections[0].name}`
+			);
+		})
+		.catch((err) =>
+			console.error(
+				"Error connecting to mongo",
+				err
+			)
+		);
+};
 
-mongoose.connection.on("connected", () => {
-	console.log(
-		"Connected to MongoDB Successfully"
-	);
-});
-
-mongoose.connection.on("error", (err) => {
-	console.log(
-		"An error occurred while connecting to MongoDB"
-	);
-	console.log(err);
-});
+module.exports = connectDB;

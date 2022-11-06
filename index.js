@@ -12,7 +12,7 @@ app.use("/", userRouter);
 app.use("/blogs", blogRouter);
 
 app.get("/", (req, res) => {
-	res.send("HEllo");
+	res.send("Welcome to my Blog");
 	console.log("Connected");
 });
 module.exports = app;

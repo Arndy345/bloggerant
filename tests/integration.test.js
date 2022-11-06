@@ -6,7 +6,7 @@ const helper = require("../utils/helper");
 const User = require("../model/users.model");
 const Blog = require("../model/blog.model");
 const blogController = require("../controllers/blogs.controllers");
-
+const connectDB = require("../db/connection");
 jest.setTimeout(50000);
 let token;
 let id;
@@ -45,6 +45,7 @@ const createBlog = async () => {
 };
 
 beforeAll(async () => {
+	await connectDB();
 	await User.deleteMany({});
 	Blog.deleteMany({});
 
