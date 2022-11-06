@@ -3,8 +3,8 @@
 <h1 align="center">Welcome to bloggerant 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://twitter.com/jhhornn" target="_blank">
-    <img alt="Twitter: nonso_andy" src="https://img.shields.io/twitter/follow/jhhornn.svg?style=social" />
+  <a href="https://twitter.com/nonso_andy" target="_blank">
+    <img alt="Twitter: nonso_andy" src="https://img.shields.io/twitter/follow/nonso_andy.svg?style=social" />
   </a>
 </p>
 
