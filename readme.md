@@ -218,7 +218,7 @@ Success
 
 ### Get Blog
 
-- Route: /orders/:id
+- Route: /blogs/:id
 - Method: GET
 - Header
   - Authorization: Bearer {token}
@@ -228,10 +228,26 @@ Success
 
 ```
 {
-    state: 1,
-    total_price: 900,
-    created_at: Mon Oct 31 2022 08:35:00 GMT+0100,
-    items: [{ name: 'chicken pizza', price: 900, size: 'm', quantity: 1}]
+  "status": true,
+  "blog": {
+    "title": "new money",
+    "description": "Money Moves",
+    "author": "6367f3b5989c3453b98f0886",
+    "state": "draft",
+    "readCount": 0,
+    "readingTime": 3,
+    "tags": [
+      "a",
+      "b",
+      "c",
+      "d"
+    ],
+    "body": "contracts, transactions, and the records of them are among the defining structures in our economic, legal, and political systems. They protect assets and set organizational boundaries. They establish and verify identities and chronicle events. They govern interactions among nations, organizations, communities, and individuals. They guide managerial and social action. And yet these critical tools and the bureaucracies formed to manage them have not kept up with the economy’s digital transformation. They’re like a rush-hour gridlock trapping a Formula 1 race car.",
+    "_id": "63680a94f457f83124167fb4",
+    "createdAt": "2022-11-06T19:27:16.590Z",
+    "updatedAt": "2022-11-06T19:27:16.590Z",
+    "__v": 0
+  }
 }
 ```
 
@@ -245,7 +261,7 @@ Success
   - Authorization: Bearer {token}
 - Query params:
   - page (default: 1)
-  - per_page (default: 10)
+  - per_page (default: 20)
   - order_by (default: created_at)
   - order (options: asc | desc, default: desc)
   - state
@@ -256,10 +272,19 @@ Success
 
 ```
 {
-    state: 1,
-    total_price: 900,
-    created_at: Mon Oct 31 2022 08:35:00 GMT+0100,
-    items: [{ name: 'chicken pizza', price: 900, size: 'm', quantity: 1}]
+  "status": true,
+  "blogs": [
+    {
+      "title": "new waves",
+      "description": "Money Moves",
+      "author": "6367f3b5989c3453b98f0886"
+    },
+    {
+      "title": "new money",
+      "description": "Money Moves",
+      "author": "6367f3b5989c3453b98f0886"
+    }
+  ]
 }
 ```
 
