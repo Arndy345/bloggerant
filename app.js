@@ -5,7 +5,7 @@ const connectDB = require("./db/connection");
 
 dotenv.config();
 
-app.listen(process.env.PORT, async () => {
+app.listen(process.env.PORT || 3000, async () => {
 	await connectDB();
 	console.log(
 		"Listening on port 3030 "
