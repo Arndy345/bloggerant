@@ -197,11 +197,11 @@ Success
   "title":"new waves",
   "description": "Money Moves",
   "tags": ["a", "b", "c", "d"],
-  "body": "contracts, transactions, and the records of them are among the defining structures in our economic, legal, and political systems. They protect assets and set organizational boundaries. They establish and verify identities and chronicle events. They govern interactions among nations, organizations, communities, and individuals. They guide managerial and social action. And yet these critical tools and the bureaucracies formed to manage them have not kept up with the economy’s digital transformation. They’re like a rush-hour gridlock trapping a Formula 1 race car."
+  "body": "contracts, transactions, and the records of them are among the defining structures in our economic, legal, and political systems. They protect assets and set organizational boundaries."
 }
 ```
 
-- Responses
+<!-- - Responses
 
 Success
 
@@ -249,7 +249,7 @@ Success
     "__v": 0
   }
 }
-```
+``` -->
 
 ---
 
@@ -266,11 +266,11 @@ Success
   - order (options: asc | desc, default: desc)
   - state
   - created_at
-- Responses
+<!-- - Responses
 
-Success
+Success -->
 
-```
+<!-- ```
 {
   "status": true,
   "blogs": [
@@ -286,7 +286,7 @@ Success
     }
   ]
 }
-```
+``` -->
 
 ---
 
@@ -296,18 +296,17 @@ Success
 
 👤 **Nonso Andrew**
 
-* Twitter: [@nonso_andy](https://twitter.com/nonso_andy)
-* Github: [@arndy345](https://github.com/arndy345)
-* LinkedIn: [@Nonso Andrew](https://linkedin.com/in/nonsougbodu)
-* Project Link: [Naija-diary](https://github.com/Arndy345/bloggerant)
-
+- Twitter: [@nonso_andy](https://twitter.com/nonso_andy)
+- Github: [@arndy345](https://github.com/arndy345)
+- LinkedIn: [@Nonso Andrew](https://linkedin.com/in/nonsougbodu)
+- Project Link: [Bloggerant](https://github.com/Arndy345/bloggerant)
 
 <!-- Markdown Links & Images -->
 
 <!-- [contributors-shield]: https://img.shields.io/github/contributors/Arndy345/bloggerant.svg?style=for-the-badge
 [contributors-url]: https://github.com/Arndy345/bloggerant/graphs/contributors -->
+
 [javascript]: https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1C
 [node]: https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
 [express]: https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB
 [mongodb]: https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white
-
