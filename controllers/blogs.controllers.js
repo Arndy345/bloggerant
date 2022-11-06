@@ -27,30 +27,29 @@ const getAllBlogs = async (req, res) => {
 	// 	console.log(searchTag);
 	// }
 
+	// if (tags) {
+	// 	console.log("here");
+
+	// 	const blogs = await Blogs.find({
+	// 		$and: [
+	// 			{ tags: { $in: searchTag } },
+	// 			{ state: { $in: "published" } },
+	// 		],
+	// 	})
+	// 		.select("title description  author -_id")
+	// 		.limit(limit)
+	// 		.skip(blogsPerPage)
+	// 		.sort(sort);
+	// 	// console.log(blogs);
+	// 	if (blogs.length === 0) {
+	// 		res.status(404);
+	// 		res.send("Not Found");
+	// 		return;
+	// 	}
+
+	// 	return res.json({ status: true, blogs });
+	// }
 	try {
-		// if (tags) {
-		// 	console.log("here");
-
-		// 	const blogs = await Blogs.find({
-		// 		$and: [
-		// 			{ tags: { $in: searchTag } },
-		// 			{ state: { $in: "published" } },
-		// 		],
-		// 	})
-		// 		.select("title description  author -_id")
-		// 		.limit(limit)
-		// 		.skip(blogsPerPage)
-		// 		.sort(sort);
-		// 	// console.log(blogs);
-		// 	if (blogs.length === 0) {
-		// 		res.status(404);
-		// 		res.send("Not Found");
-		// 		return;
-		// 	}
-
-		// 	return res.json({ status: true, blogs });
-		// }
-
 		const blogs = await Blogs.find(queryParam)
 			.select("title description  author -_id")
 			.limit(limit)
@@ -63,7 +62,7 @@ const getAllBlogs = async (req, res) => {
 			return;
 		}
 
-		return res.json({ status: true, blogs });
+		res.json({ status: true, blogs });
 	} catch (err) {
 		return res.status(400);
 	}
@@ -77,7 +76,7 @@ const getBlog = async (req, res) => {
 
 	if (title) queryParam.title = title;
 	if (id) queryParam._id = id;
-	console.log(queryParam);
+
 	try {
 		const blog = await Blogs.findOne(
 			queryParam
@@ -106,7 +105,7 @@ const getBlog = async (req, res) => {
 		res.json({ status: true, blog });
 		return;
 	} catch (err) {
-		console.log(err);
+		// console.log(err);
 		res.status(400);
 		res.json({ status: false });
 		return;
@@ -118,28 +117,32 @@ const newBlog = async (req, res) => {
 
 	const author = req.user.id;
 	body.author = author;
+
 	const wordCount = body.body.split(" ").length;
 	body.readingTime = ((wordCount) => {
 		return Math.round((wordCount / 200) * 60);
 	})(wordCount);
 
-	const user = await Users.findById(author);
+	try {
+		const user = await Users.findById(author);
 
-	const blog = await Blogs.create(body);
+		const blog = await Blogs.create(body);
 
-	user.blogs = user.blogs.concat(blog._id);
-	await user.save();
-
-	res.json({ status: true, blog });
+		user.blogs = user.blogs.concat(blog._id);
+		await user.save();
+		res.status(201);
+		res.json({ status: true, blog });
+	} catch (err) {
+		res.status(400);
+		res.send("Bad request");
+	}
 };
 //WORK ON THIS
 const editBlog = async (req, res) => {
 	const { id } = req.params;
 	const { title } = req.query;
-	// console.log(title);
 	const author = req.user.id;
 	const { body } = req.body;
-	// console.log(body);
 	let blog;
 	if (title) {
 		blog = await Blogs.find({ title });
@@ -170,7 +173,7 @@ const updateState = async (req, res) => {
 				.status(200)
 				.json({ status: true, blog });
 		} else {
-			res.status(401).send("Unauthorised");
+			res.status(401).send("Unauthorized");
 		}
 	} catch (err) {
 		res.status(400);
@@ -188,7 +191,9 @@ const deleteBlog = async (req, res) => {
 	try {
 		const blog = await Blogs.findById(id);
 		// console.log(blog);
+
 		const blogId = blog.author.valueOf();
+
 		if (author === blogId) {
 			Blogs.deleteOne(
 				{ _id: id },
@@ -211,6 +216,7 @@ const deleteBlog = async (req, res) => {
 			return;
 		}
 	} catch (error) {
+		// console.log("here");
 		res.status(400).send("Bad request");
 		return;
 	}
@@ -218,6 +224,7 @@ const deleteBlog = async (req, res) => {
 
 const getMyBlogs = async (req, res) => {
 	const author = req.user.id;
+	// console.log(author);
 	const _id = mongoose.Types.ObjectId(author);
 	const { state, page, sortBy, orderBy } =
 		req.query;

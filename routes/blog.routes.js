@@ -1,10 +1,9 @@
-const Blogs = require("../model/blog.model");
 const blogRouter = require("express").Router();
 require("../authentication/passport");
 const passport = require("passport");
-const User = require("../model/users.model");
+
 const blogController = require("../controllers/blogs.controllers");
-const authorize = require("../authentication/authorize");
+
 blogRouter.get("/", blogController.getAllBlogs);
 blogRouter.get(
 	"/getblog",

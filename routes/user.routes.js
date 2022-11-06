@@ -1,5 +1,3 @@
-// const { model } = require("mongoose");
-const userModel = require("../model/users.model.js");
 const userController = require("../controllers/users.controller");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
@@ -7,20 +5,20 @@ require("../authentication/passport");
 
 const userRouter = require("express").Router();
 
-userRouter.get("/", userController.getUsers);
+userRouter.get("/users", userController.getUsers);
 
-userRouter.post("/signup", async (req, res) => {
-	const { firstName, lastName, email, passWord } =
-		req.body;
-	const user = await userModel.create({
-		firstName,
-		lastName,
-		email,
-		passWord,
-	});
-	console.log(user);
-	res.send(user);
-});
+// userRouter.post("/signup", async (req, res) => {
+// 	const { firstName, lastName, email, passWord } =
+// 		req.body;
+// 	const user = await userModel.create({
+// 		firstName,
+// 		lastName,
+// 		email,
+// 		passWord,
+// 	});
+// 	console.log(user);
+// 	res.send(user);
+// });
 userRouter.post(
 	"/signup",
 	passport.authenticate("signup", {
@@ -40,9 +38,9 @@ userRouter.post("/login", (req, res, next) => {
 		async (err, user, info) => {
 			try {
 				if (err || !user) {
-					console.log(err, user);
+					// console.log(err);
 					const error = new Error(
-						"An error occurred"
+						"Wrong email/password"
 					);
 					return next(error);
 				}
@@ -63,7 +61,10 @@ userRouter.post("/login", (req, res, next) => {
 							{ expiresIn: "1h" }
 						);
 
-						return res.json({ token });
+						return res.json({
+							message: "login successful",
+							token,
+						});
 					}
 				);
 			} catch (error) {

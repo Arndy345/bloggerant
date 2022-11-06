@@ -20,17 +20,14 @@ passport.use(
 		async (req, email, passWord, done) => {
 			try {
 				const { firstName, lastName } = req.body;
-				// const userObject = { userName, passWord };
-				// if (userType)
-				// 	userObject.userType = userType;
-				// console.log(userObject);
+
 				const user = await User.create({
 					firstName,
 					lastName,
 					email,
 					passWord,
 				});
-				console.log(user);
+				// console.log(user);
 
 				return done(null, user);
 			} catch (error) {
@@ -97,9 +94,9 @@ passport.use(
 					// console.log(user, "hello");
 					return done(null, user);
 				}
-				return done(null, false);
+				// return done(null, false);
 			} catch (e) {
-				console.log(e);
+				return done(null, err);
 			}
 		}
 	)
