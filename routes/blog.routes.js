@@ -4,6 +4,10 @@ const passport = require("passport");
 
 const blogController = require("../controllers/blogs.controllers");
 
+blogRouter.get(
+	"/:id",
+	blogController.getBlogById
+);
 blogRouter.get("/", blogController.getAllBlogs);
 blogRouter.get(
 	"/getblog",

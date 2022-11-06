@@ -112,6 +112,47 @@ const getBlog = async (req, res) => {
 	}
 };
 
+const getBlogById = async (req, res) => {
+	const { params } = req;
+	const { id } = params;
+	const queryParam = {};
+
+	if (id) queryParam._id = id;
+
+	try {
+		const blog = await Blogs.findOne(
+			queryParam
+		).populate({
+			path: "author",
+			select: "firstName lastName -_id",
+		});
+
+		if (!blog) {
+			res.status(404).send({ status: false });
+			return;
+		}
+
+		if (blog.state !== "published") {
+			res.status(404);
+			res.json({
+				status: false,
+				message: "NOT FOUND",
+			});
+			return;
+		}
+		blog.readCount = blog.readCount + 1;
+		await blog.save();
+
+		res.status(200);
+		res.json({ status: true, blog });
+		return;
+	} catch (err) {
+		// console.log(err);
+		res.status(400);
+		res.json({ status: false });
+		return;
+	}
+};
 const newBlog = async (req, res) => {
 	const body = req.body;
 
@@ -282,4 +323,5 @@ module.exports = {
 	getAllBlogs,
 	editBlog,
 	newBlog,
+	getBlogById,
 };
