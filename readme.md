@@ -213,7 +213,7 @@ Success
     items: [{ name: 'chicken pizza', price: 900, size: 'm', quantity: 1}]
 }
 ```
-
+``` -->
 ---
 
 ### Get Blog
@@ -224,6 +224,8 @@ Success
   - Authorization: Bearer {token}
 - Responses
 
+
+<!--
 Success
 
 ```
