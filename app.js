@@ -3,14 +3,10 @@ const app = require("./index");
 const dotenv = require("dotenv");
 const connectDB = require("./db/connection");
 
-dotenv.config();
-
-app.listen(process.env.PORT || 3000, async () => {
+const port = process.env.PORT || 3000;
+app.listen(port, async () => {
 	await connectDB();
-	console.log(
-		"Listening on port 3030 "
-		// process.env.PORT
-	);
+	console.log("Listening on port", port);
 });
 
 // module.exports = app;
