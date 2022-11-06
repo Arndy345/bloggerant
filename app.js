@@ -1,12 +1,11 @@
 // const express = require("express");
 const app = require("./index");
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 const connectDB = require("./db/connection");
-
+const http = require("http");
 const port = process.env.PORT || 3000;
-app.listen(port, async () => {
+const server = http.createServer(app);
+server.listen(port, async () => {
 	await connectDB();
 	console.log("Listening on port", port);
 });
-
-// module.exports = app;
