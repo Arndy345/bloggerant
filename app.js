@@ -3,11 +3,7 @@ const app = express();
 const userRouter = require("./routes/user.routes");
 const blogRouter = require("./routes/blog.routes");
 const morgan = require("morgan");
-const {
-	errorLogger,
-	errorResponder,
-	invalidPathHandler,
-} = require("./middlewares/errorHandlers");
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use("api/", userRouter);
