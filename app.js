@@ -13,7 +13,7 @@ app.use("/blogs", blogRouter);
 app.get("/", (req, res, next) => {
 	res.send(
 		"<h1 style='color: black;text-align: center'>Welcome to <span style='color: green'>Bloggerant</span>!</h1>\
-     <br> <h3 style='color: black;text-align: center'>Click <a href='https://github.com/arndy345/bloggerant'>here</a> to get started</h3>"
+     <br> <h3 style='color: black;text-align: center'>Click <a href='https://github.com/arndy345/bloggerant' target='_blank'>here</a> to get started</h3>"
 	);
 	next();
 });
