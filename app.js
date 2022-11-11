@@ -18,10 +18,10 @@ app.get("/", (req, res, next) => {
 	next();
 });
 app.all("*", (req, res, next) => {
-	next();
+	res.status(404).json({
+		success: false,
+		message: "You have entered a wrong route",
+	});
 });
 
-// app.use(errorLogger);
-// app.use(errorResponder);
-// app.use(invalidPathHandler);
 module.exports = app;
