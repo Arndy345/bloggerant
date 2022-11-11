@@ -11,7 +11,7 @@ blogRouter
 	.route("/getblog")
 	.get(blogController.getBlog);
 blogRouter
-	.route("/:id")
+	.route("/getblog/:id")
 	.get(blogController.getBlogById);
 
 blogRouter.use(
@@ -20,14 +20,17 @@ blogRouter.use(
 		session: false,
 	})
 );
-
-blogRouter.use("/myblogs/:id", authorize);
 blogRouter
 	.route("/")
 	.post(blogController.newBlog);
+
+// blogRouter.use("/myblogs", authorize);
+
 blogRouter
 	.route("/myblogs")
 	.get(blogController.getMyBlogs);
+
+blogRouter.use("/myblogs/:id", authorize);
 blogRouter
 	.route("/myblogs/:id")
 	.get(blogController.getMyBlogById)

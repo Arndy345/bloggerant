@@ -4,14 +4,14 @@ const authorize = async (req, res, next) => {
 	const author = req.user.id;
 	const { id } = req.params;
 	try {
-		const blog = await Blogs.findById(id);
+		const blog = await Blogs.findOne({ _id: id });
 
 		if (!blog) {
 			res.status(404).send({ status: false });
 			return;
 		}
 		const blogId = blog.author.valueOf();
-		// console.log(blogId);
+
 		if (blogId === author) {
 			next();
 		} else {
@@ -20,7 +20,7 @@ const authorize = async (req, res, next) => {
 		}
 	} catch (err) {
 		res.status(400);
-		console.log(err);
+		// console.log(err);
 		next(err);
 	}
 };

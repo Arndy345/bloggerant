@@ -97,7 +97,7 @@
 
 > ### Get Blog by Id for both Authenticated and Unauthenticated Users
 
-- Route: `/blogs/:id`
+- Route: `/blogs/getblog/:id`
 - Method: `GET`
 - **Response:**
 

@@ -68,6 +68,25 @@ const getAllBlogs = async (req, res) => {
 	}
 };
 
+// db.routes
+// 	.find({
+// 		$and: [
+// 			{
+// 				$or: [
+// 					{ dst_airport: "KZN" },
+// 					{ src_airport: "KZN" },
+// 				],
+// 			},
+// 			{
+// 				$or: [
+// 					{ airplane: "CR2" },
+// 					{ airplane: "A81" },
+// 				],
+// 			},
+// 		],
+// 	})
+// 	.pretty();
+
 //LOGGED IN AND NON LOGGED IN USERS GET PUBLISHED BLOG
 const getBlog = async (req, res) => {
 	const { query } = req;
@@ -76,6 +95,7 @@ const getBlog = async (req, res) => {
 
 	if (title) queryParam.title = title;
 	if (id) queryParam._id = id;
+	// console.log(queryParam);
 
 	try {
 		const blog = await Blogs.findOne(
@@ -167,11 +187,17 @@ const newBlog = async (req, res) => {
 //WORK ON THIS
 const editBlog = async (req, res) => {
 	const { id } = req.params;
-	const { title, description, body } = req.body;
+	const { title, description, body, tags } =
+		req.body;
 
 	await Blogs.findByIdAndUpdate(
 		{ _id: id },
-		{ title, description, body },
+		{
+			title,
+			description,
+			body,
+			$push: { tags: tags },
+		},
 		{ new: true }
 	);
 	return res.status(201).json({
@@ -228,6 +254,58 @@ const deleteBlog = async (req, res) => {
 		return;
 	}
 };
+const getMyBlogs = async (req, res) => {
+	const author = req.user.id;
+	const _id = mongoose.Types.ObjectId(author);
+
+	const { state, page, sortBy, orderBy } =
+		req.query;
+
+	console.log(state);
+	const p = page || 1;
+	const limit = 20;
+	let blogsPerPage = (p - 1) * limit;
+
+	const findQuery = { _id };
+	const sort = {};
+	if (sortBy && orderBy) {
+		sort[sortBy] = orderBy === "asc" ? 1 : -1;
+	}
+	let blog;
+	try {
+		if (state) {
+			blog = await Blogs.find({
+				author: _id,
+				state: state,
+			})
+				.select("title description state")
+				.limit(limit)
+				.skip(blogsPerPage)
+				.sort(sort);
+		} else {
+			blog = await Blogs.find({
+				author: _id,
+			})
+				.select("title description state")
+				.limit(limit)
+				.skip(blogsPerPage)
+				.sort(sort);
+		}
+		console.log(blog);
+		if (blog.length != 0) {
+			res.status(200);
+			res.json({
+				status: true,
+				blog: blog,
+			});
+		} else {
+			res.status(404).send("No Blogs created");
+			return;
+		}
+	} catch (error) {
+		res.send("bad request");
+	}
+};
 const getMyBlogById = async (req, res) => {
 	const { id } = req.params;
 	try {
@@ -248,56 +326,6 @@ const getMyBlogById = async (req, res) => {
 	} catch (err) {
 		res.status(400);
 		res.json({ status: false });
-		return;
-	}
-};
-const getMyBlogs = async (req, res) => {
-	const author = req.user.id;
-	const _id = mongoose.Types.ObjectId(author);
-	const { state, page, sortBy, orderBy } =
-		req.query;
-	const p = page || 1;
-	const limit = 20;
-	let blogsPerPage = (p - 1) * limit;
-
-	const findQuery = { _id };
-	const sort = {};
-	if (sortBy && orderBy) {
-		sort[sortBy] = orderBy === "asc" ? 1 : -1;
-	}
-	let blog;
-	if (state) {
-		blog = await Users.findOne(
-			findQuery
-		).populate({
-			path: "blogs",
-			match: { state },
-			select: "title description _id author",
-			options: {
-				limit: limit,
-				skip: blogsPerPage,
-				sort,
-			},
-		});
-	} else {
-		blog = await Users.findOne(
-			findQuery
-		).populate({
-			path: "blogs",
-			select: "title description -_id",
-			options: {
-				limit: limit,
-				skip: blogsPerPage,
-				sort,
-			},
-		});
-	}
-
-	if (blog.blogs.length != 0) {
-		res.status(200);
-		res.json({ status: true, blog: blog.blogs });
-	} else {
-		res.status(404).send("No Blogs created");
 		return;
 	}
 };
