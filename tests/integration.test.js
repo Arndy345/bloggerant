@@ -9,24 +9,24 @@ const blogController = require("../controllers/blogs.controllers");
 const connectDB = require("../db/connection");
 jest.setTimeout(50000);
 let token;
-let id;
+// let id;
 
 const generateToken = async () => {
-	let token;
+	// let token;
 	const userDetails = {
-		email: "andrew@gmail.com",
-		passWord: "Password2",
+		email: "nonso@gmail.com",
+		passWord: "Password",
 	};
 
 	const response = await api
-		.post("/login")
+		.post("/api/login")
 		.send(userDetails)
 		.then((res) => {
 			expect(res.body.token).toBeDefined();
 			expect(res.status).toBe(200);
 			token = res.body.token;
 		});
-	console.log(token);
+
 	return token;
 };
 const createBlog = async () => {
@@ -34,11 +34,12 @@ const createBlog = async () => {
 
 	let blog;
 	const response = await api
-		.post(`/blogs/`)
+		.post(`/blogs`)
 		.send(helper.newBlog)
 		.set("Authorization", `Bearer ${token}`)
 		// .expect(201)
 		.then((res) => {
+			// console.log(res.body);
 			// expect(res.body.status).toBe(true);
 			blog = res.body.blog;
 		});
@@ -82,7 +83,6 @@ beforeAll(async () => {
 
 	id = user._id;
 });
-
 describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 	test("Tests login route and returns a user token", async () => {
 		const userDetails = {
@@ -90,7 +90,7 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 			passWord: "Password",
 		};
 		const response = await api
-			.post("/login")
+			.post("/api/login")
 			.send(userDetails)
 			.then((res) => {
 				expect(res.body.token).toBeDefined();
@@ -102,7 +102,7 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 
 	test("CREATES A NEW USER SUCCESSFULLY", async () => {
 		const response = await api
-			.post("/signup")
+			.post("/api/signup")
 			.send(helper.newUser)
 			.then((res) => {
 				expect(res.status).toBe(200);
@@ -111,7 +111,7 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 	});
 	test("FAILS TO CREATE A USER DUE TO DUPLICATE", async () => {
 		const response = await api
-			.post("/signup")
+			.post("/api/signup")
 			.send(helper.newUser)
 			.then((res) => {
 				// console.log(res);
@@ -125,7 +125,7 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 
 		//ADD QUERIES
 		const response = await api
-			.get("/users")
+			.get("/api/users")
 
 			.then((res) => {
 				expect(res).toBeDefined();
@@ -225,8 +225,8 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 	});
 
 	test("gets blogs of a particular user", async () => {
-		// await generateToken();
-		// console.log(token);
+		const token = await generateToken();
+
 		const page = 3;
 		const state = "published";
 		const orderBy = "asc";
@@ -241,11 +241,10 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		expect(response.body).toBeDefined();
 	});
 	test("MY BLOG BY ID", async () => {
-		// const queryParam = { state: "published" };
-		const token = await generateToken;
+		const token = await generateToken();
 		const blog = await createBlog();
 		const result = await api
-			.get(`/blogs/myblog/${blog._id}`)
+			.get(`/blogs/myblogs/${blog._id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(200)
 			.expect(
@@ -255,26 +254,27 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 
 		expect(result.body.status).toBe(true);
 	});
-	test("tries to get blogs of user with no blogs created", async () => {
-		let token = await generateToken();
-		const page = 3;
-		const state = "published";
-		const orderBy = "asc";
-		const sortBy = "timestamps";
-		const response = await api
-			.get(
-				`/blogs/myblogs/?${page}&${state}&${orderBy}&${sortBy}`
-			)
-			.set("Authorization", `Bearer ${token}`)
-			.expect(404);
+	// test("tries to get blogs of user with no blogs created", async () => {
+	// 	let token = await generateToken();
+	// 	const page = 3;
+	// 	const state = "published";
+	// 	const orderBy = "asc";
+	// 	const sortBy = "timestamps";
+	// 	const response = await api
+	// 		.get(
+	// 			`/blogs/myblogs/?${page}&${state}&${orderBy}&${sortBy}`
+	// 		)
+	// 		.set("Authorization", `Bearer ${token}`)
+	// 		.expect(404);
 
-		expect(response.text).toBe(
-			"No Blogs created"
-		);
-	});
+	// 	expect(response.text).toBe(
+	// 		"No Blogs created"
+	// 	);
+	// });
 
 	test("FAILS TO GET BLOGS AS WRONG TOKEN IS PASSED ", async () => {
-		const token = await generateToken();
+		const token =
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYzNzEwYzA0Njk0YzRiZjJhMTE3ZTdmZSIsImVtYWlsIjoibm9uc29AZ21haWwuY29tIn0sImlhdCI6MTY2ODM1MzAzMSwiZXhwIjoxNjY4MzU2NjMxfQ.eW9noe4ne06XWSfKFKfEQBSul8OKcDlpiPbTbZ-l1ZY";
 		// console.log(token);
 		const page = 3;
 		const response = await api
@@ -289,9 +289,10 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		const blog = await Blog.findOne({
 			state: "draft",
 		});
+		const token = await generateToken();
 		const id = blog._id;
 		const response = await api
-			.patch(`/blogs/${id}`)
+			.patch(`/blogs/myblogs/${id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(200);
 
@@ -303,23 +304,22 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		);
 	});
 	test("UPDATE STATE OF BLOG FAILS DUE WRONG ID", async () => {
+		const token = await generateToken();
 		const id = "636519cfeaae3d2929ee5f2b";
 		const response = await api
-			.patch(`/blogs/${id}`)
+			.patch(`/blogs/myblogs/${id}`)
 			.set("Authorization", `Bearer ${token}`)
-			.expect(400);
-
-		expect(response.body.message).toBe(
-			"Bad request"
-		);
+			.expect(404);
+		expect(response.body.status).toBe(false);
 	});
 	test("UPDATE STATE OF BLOG FAILS DUE WRONG AUTHORIZATION", async () => {
-		const token = await generateToken();
+		const token =
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYzNzEwYzA0Njk0YzRiZjJhMTE3ZTdmZSIsImVtYWlsIjoibm9uc29AZ21haWwuY29tIn0sImlhdCI6MTY2ODM1MzAzMSwiZXhwIjoxNjY4MzU2NjMxfQ.eW9noe4ne06XWSfKFKfEQBSul8OKcDlpiPbTbZ-l1ZY";
 		const blog = await Blog.findOne({
 			state: "published",
 		});
 		const response = await api
-			.patch(`/blogs/${blog._id}`)
+			.patch(`/blogs/myblogs/${blog._id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(401);
 
@@ -327,11 +327,14 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 	});
 
 	test("DELETE BLOG", async () => {
-		const blog = await createBlog();
+		const blog = await Blog.findOne({
+			author: id,
+		});
+
 		const token = await generateToken();
 
 		const response = await api
-			.delete(`/blogs/${blog._id}`)
+			.delete(`/blogs/myblogs/${blog._id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(200);
 
@@ -339,36 +342,40 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 	});
 
 	test("WRONG USER TRIES TO DELETE BLOG", async () => {
-		const token = await generateToken();
+		const token =
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYzNzEwYzA0Njk0YzRiZjJhMTE3ZTdmZSIsImVtYWlsIjoibm9uc29AZ21haWwuY29tIn0sImlhdCI6MTY2ODM1MzAzMSwiZXhwIjoxNjY4MzU2NjMxfQ.eW9noe4ne06XWSfKFKfEQBSul8OKcDlpiPbTbZ-l1ZY";
 		const blog = await Blog.findOne({
 			author: id,
 		});
 
 		const response = await api
-			.delete(`/blogs/${blog._id}`)
+			.delete(`/blogs/myblogs/${blog._id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(401)
 			.then((res) => {
-				expect(res.body.status).toBe(false);
-				expect(res.body.message).toBe(
-					"Unauthorized"
-				);
+				expect(res.text).toBe("Unauthorized");
 			});
 	});
 	test("TRIES TO DELETE A NON EXISTENT BLOG", async () => {
+		const token = await generateToken();
 		const id = "636519cfeaae3d2929ee5f2b";
 		const response = await api
-			.delete(`/blogs/${id}`)
+			.delete(`/blogs/myblogs/${id}`)
 			.set("Authorization", `Bearer ${token}`)
-			.expect(400);
-
-		expect(response.text).toBe("Bad request");
+			.expect(404);
+		expect(response.body.status).toBe(false);
 	});
 	test("TRIES TO CREATE A NEW BLOG", async () => {
 		const token = await generateToken();
+		const newBlog = {
+			title: "A bug's life",
+			description: "The gods are dead",
+			tags: "#movies",
+			body: "The gods are dead talks about a th belief of a certain community",
+		};
 		const response = await api
 			.post(`/blogs/`)
-			.send(helper.newBlog)
+			.send(newBlog)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(201)
 			.then((res) => {

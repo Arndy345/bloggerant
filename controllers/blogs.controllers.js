@@ -261,12 +261,12 @@ const getMyBlogs = async (req, res) => {
 	const { state, page, sortBy, orderBy } =
 		req.query;
 
-	console.log(state);
+	// console.log(state);
 	const p = page || 1;
 	const limit = 20;
 	let blogsPerPage = (p - 1) * limit;
 
-	const findQuery = { _id };
+	// const findQuery = { _id };
 	const sort = {};
 	if (sortBy && orderBy) {
 		sort[sortBy] = orderBy === "asc" ? 1 : -1;
@@ -291,7 +291,7 @@ const getMyBlogs = async (req, res) => {
 				.skip(blogsPerPage)
 				.sort(sort);
 		}
-		console.log(blog);
+		// console.log(blog);
 		if (blog.length != 0) {
 			res.status(200);
 			res.json({
