@@ -398,7 +398,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 });
 
 afterAll(async () => {
-	await User.deleteMany({});
-	await Blog.deleteMany({});
+	// await User.deleteMany({});
+	// await Blog.deleteMany({});
 	mongoose.connection.close();
 });
