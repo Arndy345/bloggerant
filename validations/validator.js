@@ -1,5 +1,24 @@
 const joi = require("joi");
 
+const validateUserMiddleWare = async (
+	req,
+	res,
+	next
+) => {
+	const userPayload = req.body;
+
+	try {
+		await userValidator.validateAsync(
+			userPayload
+		);
+		next();
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(406)
+			.send(error.details[0].message);
+	}
+};
 const validateBlogMiddleWare = async (
 	req,
 	res,
@@ -28,11 +47,22 @@ const blogValidator = joi.object({
 		.optional(),
 	// author: joi.objectId().required(),
 	body: joi.string().required(),
-	state: joi.string().default('draft'),
+	state: joi.string().default("draft"),
 	readCount: joi.number().default(0),
 	tags: joi.string().optional(),
-	// createAt: joi.date().default(Date.now()),
-	// lastUpdateAt: joi.date().default(Date.now()),
+});
+const userValidator = joi.object({
+	firstName: joi.string().required(),
+	lastName: joi.string().required(),
+	email: joi.string().required(),
+	passWord: joi
+		.string()
+		.min(5)
+		.max(255)
+		.required(),
 });
 
-module.exports = validateBlogMiddleWare;
+module.exports = {
+	validateBlogMiddleWare,
+	validateUserMiddleWare,
+};
