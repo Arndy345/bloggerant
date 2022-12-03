@@ -45,6 +45,36 @@ const initialBlogs = [
 		body: "The gods are dead talks about a th belief of a certain community",
 		state: "published",
 	},
+	{
+		title: "LOVE DAMINI",
+		description: "The gods are dead",
+		owner: "John Doe",
+		tags: ["burna boy", "african giant"],
+		body: "The gods are dead talks about a th belief of a certain community",
+	},
+	{
+		title: "More Love Less Ego",
+		description: "The gods are dead",
+		owner: "John Doe",
+		tags: "horror, MLLE Wizkid",
+		body: "The gods are dead talks about a th belief of a certain community",
+		state: "published",
+	},
+	{
+		title: "What a football season",
+		description: "The gods are dead",
+		owner: "John Doe",
+		tags: "horror",
+		body: "The gods are dead talks about a th belief of a certain community",
+		state: "published",
+	},
+	{
+		title: "What a day to be alive",
+		description: "The gods are dead",
+		owner: "John Doe",
+		tags: "horror",
+		body: "The gods are dead talks about a th belief of a certain community",
+	},
 ];
 
 const newBlog = {

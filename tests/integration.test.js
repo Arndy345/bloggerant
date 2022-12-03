@@ -48,8 +48,9 @@ const createBlog = async () => {
 
 beforeAll(async () => {
 	await connectDB();
+
 	await User.deleteMany({});
-	Blog.deleteMany({});
+	await Blog.deleteMany({});
 
 	const userObject = helper.initialUsers.map(
 		(user) => new User(user)
@@ -62,7 +63,7 @@ beforeAll(async () => {
 	const user = await User.findOne({
 		email: "nonso@gmail.com",
 	});
-	await Blog.deleteMany({});
+	// await Blog.deleteMany({});
 	helper.initialBlogs.map(
 		(blog) => (blog.author = user._id)
 	);
@@ -86,9 +87,10 @@ beforeAll(async () => {
 describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 	test("Tests login route and returns a user token", async () => {
 		const userDetails = {
-			email: "nonso@gmail.com",
-			passWord: "Password",
+			email: "andrew@gmail.com",
+			passWord: "Password2",
 		};
+
 		const response = await api
 			.post("/api/login")
 			.send(userDetails)
@@ -96,8 +98,9 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 				expect(res.body.token).toBeDefined();
 				expect(res.status).toBe(200);
 				token = res.body.token;
-				// console.log(token);
 			});
+
+		return token;
 	});
 
 	test("CREATES A NEW USER SUCCESSFULLY", async () => {
@@ -115,7 +118,7 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 			.send(helper.newUser)
 			.then((res) => {
 				// console.log(res);
-				expect(res.status).toBe(500);
+				expect(res.status).toBe(400);
 				expect(res.body.user).toBeUndefined();
 			});
 	});
@@ -226,7 +229,6 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 
 	test("gets blogs of a particular user", async () => {
 		const token = await generateToken();
-
 		const page = 3;
 		const state = "published";
 		const orderBy = "asc";
@@ -395,6 +397,8 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 	});
 });
 
-afterAll(() => {
+afterAll(async () => {
+	await User.deleteMany({});
+	await Blog.deleteMany({});
 	mongoose.connection.close();
 });

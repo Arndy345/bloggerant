@@ -7,7 +7,10 @@ const authorize = async (req, res, next) => {
 		const blog = await Blogs.findOne({ _id: id });
 
 		if (!blog) {
-			res.status(404).send({ status: false });
+			res.status(404).send({
+				message: "Blog not found",
+				status: false,
+			});
 			return;
 		}
 		const blogId = blog.author.valueOf();
@@ -15,12 +18,9 @@ const authorize = async (req, res, next) => {
 		if (blogId === author) {
 			next();
 		} else {
-			res.status(401);
-			res.send("Unauthorised");
+			throw new Error("auth");
 		}
 	} catch (err) {
-		res.status(400);
-		// console.log(err);
 		next(err);
 	}
 };

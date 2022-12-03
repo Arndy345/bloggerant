@@ -6,11 +6,17 @@ const getAllBlogs = async (req, res) => {
 	const queryParam = {
 		state: "published",
 	};
-	const { page, sortBy, author, title, tags } =
-		req.query;
+	const {
+		page = 1,
+		limit = 20,
+		sortBy,
+		author,
+		title,
+		tags,
+	} = req.query;
 	const { orderBy } = req.query || "asc";
 	const p = page || 1;
-	const limit = 20;
+	// const limit = 20;
 	let blogsPerPage = (p - 1) * limit;
 
 	const sort = {};
@@ -58,34 +64,16 @@ const getAllBlogs = async (req, res) => {
 
 		if (blogs.length === 0) {
 			res.status(404);
-			res.send("Not Found");
+			res.send("Blog Not Found");
 			return;
 		}
 
 		res.json({ status: true, blogs });
 	} catch (err) {
+		console.log(err);
 		return res.status(400);
 	}
 };
-
-// db.routes
-// 	.find({
-// 		$and: [
-// 			{
-// 				$or: [
-// 					{ dst_airport: "KZN" },
-// 					{ src_airport: "KZN" },
-// 				],
-// 			},
-// 			{
-// 				$or: [
-// 					{ airplane: "CR2" },
-// 					{ airplane: "A81" },
-// 				],
-// 			},
-// 		],
-// 	})
-// 	.pretty();
 
 //LOGGED IN AND NON LOGGED IN USERS GET PUBLISHED BLOG
 const getBlog = async (req, res) => {
@@ -95,7 +83,6 @@ const getBlog = async (req, res) => {
 
 	if (title) queryParam.title = title;
 	if (id) queryParam._id = id;
-	// console.log(queryParam);
 
 	try {
 		const blog = await Blogs.findOne(
@@ -106,7 +93,10 @@ const getBlog = async (req, res) => {
 		});
 
 		if (!blog) {
-			res.status(404).send({ status: false });
+			res.status(404).send({
+				status: false,
+				message: "Blog not found",
+			});
 			return;
 		}
 
@@ -114,7 +104,7 @@ const getBlog = async (req, res) => {
 			res.status(404);
 			res.json({
 				status: false,
-				message: "NOT FOUND",
+				message: "Blog not found",
 			});
 			return;
 		}
@@ -125,16 +115,16 @@ const getBlog = async (req, res) => {
 		res.json({ status: true, blog });
 		return;
 	} catch (err) {
-		// console.log(err);
 		res.status(400);
-		res.json({ status: false });
+		res.json({
+			status: false,
+		});
 		return;
 	}
 };
 
-const getBlogById = async (req, res) => {
+const getBlogById = async (req, res, next) => {
 	const { id } = req.params;
-
 	try {
 		const blog = await Blogs.findOneAndUpdate(
 			{ _id: id, state: "published" },
@@ -146,23 +136,22 @@ const getBlogById = async (req, res) => {
 		});
 		if (!blog) {
 			res.status(404);
-			res.json({ status: false });
+			res.json({
+				status: false,
+				message: "Blog not found",
+			});
 			return;
 		}
 		res.status(200);
 		res.json(blog);
 		return;
 	} catch (err) {
-		res.status(400);
-		res.json({ status: false });
-		return;
+		next(err);
 	}
 };
 const newBlog = async (req, res) => {
 	const body = req.body;
-
 	const author = req.user.id;
-
 	body.author = author;
 
 	const wordCount = body.body.split(" ").length;
@@ -172,7 +161,6 @@ const newBlog = async (req, res) => {
 
 	try {
 		const user = await Users.findById(author);
-
 		const blog = await Blogs.create(body);
 
 		user.blogs = user.blogs.concat(blog._id);
@@ -227,12 +215,7 @@ const updateState = async (req, res) => {
 			blog,
 		});
 	} catch (err) {
-		res.status(400);
-		res.json({
-			status: false,
-			message: "Bad request",
-		});
-		return;
+		next();
 	}
 };
 
@@ -250,20 +233,24 @@ const deleteBlog = async (req, res) => {
 		});
 		return;
 	} catch (error) {
-		res.status(400).send("Bad request");
-		return;
+		next();
 	}
 };
 const getMyBlogs = async (req, res) => {
 	const author = req.user.id;
 	const _id = mongoose.Types.ObjectId(author);
 
-	const { state, page, sortBy, orderBy } =
-		req.query;
+	const {
+		state,
+		page = 1,
+		limit = 20,
+		sortBy,
+		orderBy,
+	} = req.query;
 
 	// console.log(state);
-	const p = page || 1;
-	const limit = 20;
+	const p = page;
+	// const limit = 20;
 	let blogsPerPage = (p - 1) * limit;
 
 	// const findQuery = { _id };
@@ -303,7 +290,7 @@ const getMyBlogs = async (req, res) => {
 			return;
 		}
 	} catch (error) {
-		res.send("bad request");
+		next(error);
 	}
 };
 const getMyBlogById = async (req, res) => {
@@ -324,9 +311,7 @@ const getMyBlogById = async (req, res) => {
 		res.json({ status: true, blog });
 		return;
 	} catch (err) {
-		res.status(400);
-		res.json({ status: false });
-		return;
+		next(err);
 	}
 };
 

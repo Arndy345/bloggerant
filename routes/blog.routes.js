@@ -3,6 +3,9 @@ require("../authentication/passport");
 const passport = require("passport");
 const authorize = require("../authentication/authorize");
 const blogController = require("../controllers/blogs.controllers");
+const {
+	validateBlogMiddleWare,
+} = require("../validations/validator");
 
 blogRouter
 	.route("/")
@@ -22,7 +25,10 @@ blogRouter.use(
 );
 blogRouter
 	.route("/")
-	.post(blogController.newBlog);
+	.post(
+		validateBlogMiddleWare,
+		blogController.newBlog
+	);
 
 // blogRouter.use("/myblogs", authorize);
 
