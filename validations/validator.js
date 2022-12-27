@@ -1,6 +1,6 @@
 const joi = require("joi");
 
-const validateUserMiddleWare = async (
+const validateUserSignup = async (
 	req,
 	res,
 	next
@@ -8,7 +8,26 @@ const validateUserMiddleWare = async (
 	const userPayload = req.body;
 
 	try {
-		await userValidator.validateAsync(
+		await userSignupValidator.validateAsync(
+			userPayload
+		);
+		next();
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(406)
+			.send(error.details[0].message);
+	}
+};
+const validateUserLogin = async (
+	req,
+	res,
+	next
+) => {
+	const userPayload = req.body;
+
+	try {
+		await userLoginValidator.validateAsync(
 			userPayload
 		);
 		next();
@@ -51,9 +70,17 @@ const blogValidator = joi.object({
 	readCount: joi.number().default(0),
 	tags: joi.string().optional(),
 });
-const userValidator = joi.object({
+const userSignupValidator = joi.object({
 	firstName: joi.string().required(),
 	lastName: joi.string().required(),
+	email: joi.string().required(),
+	passWord: joi
+		.string()
+		.min(5)
+		.max(255)
+		.required(),
+});
+const userLoginValidator = joi.object({
 	email: joi.string().required(),
 	passWord: joi
 		.string()
@@ -64,5 +91,6 @@ const userValidator = joi.object({
 
 module.exports = {
 	validateBlogMiddleWare,
-	validateUserMiddleWare,
+	validateUserSignup,
+	validateUserLogin,
 };
