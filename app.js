@@ -25,9 +25,9 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // Apply the rate limiting middleware to API calls only
-app.use("/blogs", limiter);
-app.use("/api", userRouter);
-app.use("/blogs", blogRouter);
+app.use("/api", limiter);
+app.use("/", userRouter);
+app.use("/api", blogRouter);
 
 app.get("/", (req, res, next) => {
 	res.send(

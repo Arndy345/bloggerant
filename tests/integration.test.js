@@ -19,7 +19,7 @@ const generateToken = async () => {
 	};
 
 	const response = await api
-		.post("/api/login")
+		.post("/login")
 		.send(userDetails)
 		.then((res) => {
 			expect(res.body.token).toBeDefined();
@@ -34,7 +34,7 @@ const createBlog = async () => {
 
 	let blog;
 	const response = await api
-		.post(`/blogs`)
+		.post(`/api/blogs`)
 		.send(helper.newBlog)
 		.set("Authorization", `Bearer ${token}`)
 		// .expect(201)
@@ -92,7 +92,7 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 		};
 
 		const response = await api
-			.post("/api/login")
+			.post("/login")
 			.send(userDetails)
 			.then((res) => {
 				expect(res.body.token).toBeDefined();
@@ -105,7 +105,7 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 
 	test("CREATES A NEW USER SUCCESSFULLY", async () => {
 		const response = await api
-			.post("/api/signup")
+			.post("/signup")
 			.send(helper.newUser)
 			.then((res) => {
 				expect(res.status).toBe(200);
@@ -114,7 +114,7 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 	});
 	test("FAILS TO CREATE A USER DUE TO DUPLICATE", async () => {
 		const response = await api
-			.post("/api/signup")
+			.post("/signup")
 			.send(helper.newUser)
 			.then((res) => {
 				// console.log(res);
@@ -128,7 +128,7 @@ describe("TESTS THE USER LOGIN AND SIGNUP ROUTES", () => {
 
 		//ADD QUERIES
 		const response = await api
-			.get("/api/users")
+			.get("/users")
 
 			.then((res) => {
 				expect(res).toBeDefined();
@@ -141,7 +141,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 	test("all blogs are returned", async () => {
 		const queryParam = { state: "published" };
 		const result = await api
-			.get("/blogs/")
+			.get("/api/blogs")
 			.send(queryParam)
 			.expect(200)
 			.expect(
@@ -235,7 +235,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		const sortBy = "timestamps";
 		const response = await api
 			.get(
-				`/blogs/myblogs/?${page}&${state}&${orderBy}&${sortBy}`
+				`/api/myblogs/?${page}&${state}&${orderBy}&${sortBy}`
 			)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(200);
@@ -246,7 +246,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		const token = await generateToken();
 		const blog = await createBlog();
 		const result = await api
-			.get(`/blogs/myblogs/${blog._id}`)
+			.get(`/api/myblogs/${blog._id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(200)
 			.expect(
@@ -264,7 +264,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 	// 	const sortBy = "timestamps";
 	// 	const response = await api
 	// 		.get(
-	// 			`/blogs/myblogs/?${page}&${state}&${orderBy}&${sortBy}`
+	// 			`/api/myblogs/?${page}&${state}&${orderBy}&${sortBy}`
 	// 		)
 	// 		.set("Authorization", `Bearer ${token}`)
 	// 		.expect(404);
@@ -280,7 +280,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		// console.log(token);
 		const page = 3;
 		const response = await api
-			.get(`/blogs/myblogs/?${page}`)
+			.get(`/api/myblogs/?${page}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(401);
 
@@ -294,7 +294,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		const token = await generateToken();
 		const id = blog._id;
 		const response = await api
-			.patch(`/blogs/myblogs/${id}`)
+			.patch(`/api/myblogs/${id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(200);
 
@@ -309,7 +309,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		const token = await generateToken();
 		const id = "636519cfeaae3d2929ee5f2b";
 		const response = await api
-			.patch(`/blogs/myblogs/${id}`)
+			.patch(`/api/myblogs/${id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(404);
 		expect(response.body.status).toBe(false);
@@ -321,7 +321,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 			state: "published",
 		});
 		const response = await api
-			.patch(`/blogs/myblogs/${blog._id}`)
+			.patch(`/api/myblogs/${blog._id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(401);
 
@@ -336,7 +336,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		const token = await generateToken();
 
 		const response = await api
-			.delete(`/blogs/myblogs/${blog._id}`)
+			.delete(`/api/myblogs/${blog._id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(200);
 
@@ -351,7 +351,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		});
 
 		const response = await api
-			.delete(`/blogs/myblogs/${blog._id}`)
+			.delete(`/api/myblogs/${blog._id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(401)
 			.then((res) => {
@@ -362,7 +362,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 		const token = await generateToken();
 		const id = "636519cfeaae3d2929ee5f2b";
 		const response = await api
-			.delete(`/blogs/myblogs/${id}`)
+			.delete(`/api/myblogs/${id}`)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(404);
 		expect(response.body.status).toBe(false);
@@ -376,7 +376,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 			body: "The gods are dead talks about a th belief of a certain community",
 		};
 		const response = await api
-			.post(`/blogs/`)
+			.post(`/api/blogs/`)
 			.send(newBlog)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(201)
@@ -387,7 +387,7 @@ describe("TESTS ALL THE BLOG ROUTES", () => {
 	test("TRIES TO CREATE A NEW BLOG WITHOUT TOKEN", async () => {
 		let token;
 		const response = await api
-			.post(`/blogs/`)
+			.post(`/api/blogs/`)
 			.send(helper.newBlog)
 			.set("Authorization", `Bearer ${token}`)
 			.expect(401)

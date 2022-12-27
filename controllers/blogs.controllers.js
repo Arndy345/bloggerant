@@ -193,7 +193,7 @@ const editBlog = async (req, res) => {
 	});
 };
 
-const updateState = async (req, res) => {
+const updateBlog = async (req, res) => {
 	const { id } = req.params;
 	try {
 		const blog = await Blogs.findOneAndUpdate(
@@ -316,7 +316,7 @@ const getMyBlogById = async (req, res) => {
 };
 
 module.exports = {
-	updateState,
+	updateBlog,
 	deleteBlog,
 	getMyBlogs,
 	getMyBlogById,

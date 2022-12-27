@@ -7,7 +7,8 @@ const {
 } = require("../controllers/users.controller");
 require("../authentication/passport");
 const {
-	validateUserMiddleWare,
+	validateUserSignup,
+	validateUserLogin,
 } = require("../validations/validator");
 
 const userRouter = require("express").Router();
@@ -16,13 +17,13 @@ userRouter.get("/users", userController.getUsers);
 
 userRouter.post(
 	"/signup",
-	validateUserMiddleWare,
+	validateUserSignup,
 	passport.authenticate("signup", {
 		session: false,
 	}),
 	signup
 );
-userRouter.route("/login").post(login);
+userRouter.post("/login", validateUserLogin);
 // userRouter.post("/login", (req, res, next) => {
 // 	passport.authenticate(
 // 		"login",

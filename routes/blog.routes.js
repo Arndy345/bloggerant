@@ -8,7 +8,7 @@ const {
 } = require("../validations/validator");
 
 blogRouter
-	.route("/")
+	.route("/blogs")
 	.get(blogController.getAllBlogs);
 blogRouter
 	.route("/getblog")
@@ -24,7 +24,7 @@ blogRouter.use(
 	})
 );
 blogRouter
-	.route("/")
+	.route("/blogs")
 	.post(
 		validateBlogMiddleWare,
 		blogController.newBlog
@@ -41,7 +41,7 @@ blogRouter
 	.route("/myblogs/:id")
 	.get(blogController.getMyBlogById)
 	.put(blogController.editBlog)
-	.patch(blogController.updateState)
+	.patch(blogController.updateBlog)
 	.delete(blogController.deleteBlog);
 
 module.exports = blogRouter;

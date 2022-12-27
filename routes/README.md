@@ -4,7 +4,7 @@
 
 > ### Signup User
 
-- Route: `/api/signup`
+- Route: `/signup`
 - Method: `POST`
 - **Body:**
 
@@ -38,7 +38,7 @@
 
 > ### Login User
 
-- Route: `/api/login`
+- Route: `/login`
 - Method: `POST`
 - **Body:**
 
@@ -61,7 +61,7 @@
 
 > ### Create Blog
 
-- Route: `/blogs`
+- Route: `/api/blogs`
 - Method: `POST`
 - Header
   - Authorization: `Bearer {token}`
@@ -97,7 +97,7 @@
 
 > ### Get Blog by Id for both Authenticated and Unauthenticated Users
 
-- Route: `/blogs/getblog/:id`
+- Route: `/api/getblog/:id`
 - Method: `GET`
 - **Response:**
 
@@ -115,7 +115,7 @@
 
 > ### Get all BLOGS for both Authenticated and Unauthenticated Users
 
-- Route: `/blogs`
+- Route: `/api/blogs`
 - Method: `GET`
 - Query params:
 
@@ -158,7 +158,7 @@
 
 > ### Get Blog by Id for Authenticated Users
 
-- Route: `blogs/myblogs/:id`
+- Route: `api/myblogs/:id`
 - Method: `GET`
 - Header
   - Authorization: `Bearer {token}`
@@ -178,18 +178,18 @@
 
 > ### Get all BLOGS for Authenticated Users
 
-- Route: `/blogs/myblogs`
+- Route: `/api/myblogs`
 - Method: `GET`
 - Header
   - Authorization: `Bearer {token}`
 - Query params:
 
-  - page (default: 1) - `/blogs/myblogs?p=2`
+  - page (default: 1) - `/api/myblogs?p=2`
   - per_page (default: 20) - `blogs/myblogs?p=2`
-  - title - `/blogs/myblogs?title=the title of the blog`
-  - state - `/blogs/myblogs?state=published`
-  - tags - `/blogs/myblogs?tag=the blog tag`
-  - sort (sortBy : orderBy, default: asc) - `/blogs/myblogs?sortBy=field in blog db&orderBy=asc or desc`
+  - title - `/api/myblogs?title=the title of the blog`
+  - state - `/api/myblogs?state=published`
+  - tags - `/api/myblogs?tag=the blog tag`
+  - sort (sortBy : orderBy, default: asc) - `/api/myblogs?sortBy=field in blog db&orderBy=asc or desc`
 
 - **Response:**
 
@@ -222,7 +222,7 @@
 
 > ### Update blog by Authenticated and Authorised User
 
-- Route: `/blogs/myblogs/:id`
+- Route: `/api/myblogs/:id`
 - Method: `PUT`
 - Header
   - Authorization: `Bearer {token}`
@@ -249,7 +249,7 @@
 
 > ### Update blog state by Authenticated and Authorised User
 
-- Route: `/blogs/myblogs/:id`
+- Route: `/api/myblogs/:id`
 - Method: `PATCH`
 - Header
 
@@ -268,7 +268,7 @@
 
 > ### Delete blog by Authenticated and Authorised User
 
-- Route: `/blogs/myblogs/:id`
+- Route: `/api/myblogs/:id`
 - Method: `DELETE`
 - Header
 
