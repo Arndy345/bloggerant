@@ -46,11 +46,7 @@ npm run dev
 npm run test
 ```
 
-## Run prettier format
 
-```sh
-npm run format
-```
 
 ---
 
