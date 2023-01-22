@@ -54,6 +54,35 @@ const login = async (req, res, next) => {
 		}
 	)(req, res, next);
 };
+// //USE JWT WITHOUT PASSPORT
+// const login = async (req, res) => {
+// 	const { email, passWord } = req.body;
+// 	const user = await User.findOne({
+// 		email,
+// 	});
+
+// 	if (!user) {
+// 		return done(null, false, {
+// 			message: "User not found",
+// 		});
+// 	}
+// 	const validate = await user.comparePasswords(
+// 		passWord
+// 	);
+
+// 	if (!validate) {
+// 		return done(null, false, {
+// 			message: "Wrong Password",
+// 		});
+// 	}
+// 	const { _id, firstName, lastName } = user;
+// 	const token = jwt.sign(
+// 		{ email, _id, lastName, firstName },
+// 		process.env.JWT_SECRET,
+// 		{ expiresIn: "10d" }
+// 	);
+// 	res.status(200).json(token);
+// };
 module.exports = {
 	getUsers,
 	signup,

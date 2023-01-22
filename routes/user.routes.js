@@ -23,7 +23,12 @@ userRouter.post(
 	}),
 	signup
 );
-userRouter.post("/login", validateUserLogin);
+userRouter.post(
+	"/login",
+	validateUserLogin,
+	login
+);
+
 // userRouter.post("/login", (req, res, next) => {
 // 	passport.authenticate(
 // 		"login",

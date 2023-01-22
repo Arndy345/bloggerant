@@ -25,7 +25,9 @@
 ```sh
 git clone https://github.com/Arndy345/bloggerant.git
 ```
-
+###Dependencies
+- Create a .env file
+- Add the MONGO_URI, JWT_SECRET and PORT to the file 
 ## Install
 
 ```sh
