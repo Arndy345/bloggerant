@@ -26,8 +26,8 @@ app.use(morgan("dev"));
 
 // Apply the rate limiting middleware to API calls only
 app.use("/api", limiter);
-app.use("/", userRouter);
-app.use("/api", blogRouter);
+app.use("/api/v1/auth", userRouter);
+app.use("/api/v1", blogRouter);
 
 app.get("/", (req, res, next) => {
 	res.send(

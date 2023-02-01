@@ -14,7 +14,7 @@ blogRouter
 	.route("/blog")
 	.get(blogController.getBlog);
 blogRouter
-	.route("/getblog/:id")
+	.route("/blogs/:id")
 	.get(blogController.getBlogById);
 
 blogRouter.use(
