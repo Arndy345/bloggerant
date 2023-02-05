@@ -1,0 +1,358 @@
+openapi: 3.0.0
+info:
+  title: BLOG API
+  contact: {}
+  version: '1.0'
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+servers:
+- url: https://better-apron-ox.cyclic.app/api/v1
+  variables: {}
+paths:
+  /auth/signup:
+    post:
+      tags:
+      - Misc
+      summary: New Request
+      operationId: NewRequest
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/NewRequestRequest'
+              - examples:
+                - firstName: Andrew
+                  lastName: Nonso
+                  email: nonso@gmail.com
+                  passWord: password
+              contentMediaType: application/json
+            example:
+              firstName: Andrew
+              lastName: Nonso
+              email: nonso@gmail.com
+              passWord: password
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    parameters: []
+  /auth/login:
+    post:
+      tags:
+      - Misc
+      summary: LOGIN
+      operationId: LOGIN
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/LOGINREQUEST'
+              - examples:
+                - email: nonso@gmail.com
+                  passWord: password
+              contentMediaType: application/json
+            example:
+              email: nonso@gmail.com
+              passWord: password
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    parameters: []
+  /blogs:
+    post:
+      tags:
+      - Misc
+      summary: CREATE POST
+      operationId: CREATEPOST
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/CREATEPOSTREQUEST'
+              - examples:
+                - title: New school music
+                  description: Afro Beats
+                  body: African sound
+              contentMediaType: application/json
+            example:
+              title: New school music
+              description: Afro Beats
+              body: African sound
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    get:
+      tags:
+      - Misc
+      summary: GET ALL  POSTS (Unprotected route)
+      operationId: GETALLPOSTS(Unprotectedroute)
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+    parameters: []
+  /myblogs:
+    get:
+      tags:
+      - Misc
+      summary: GET ALL  POSTS  FOR A SINGLE USER(protected route)
+      operationId: GET ALL POSTS FOR A SINGLE USER
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    parameters: []
+  /blogs/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The blog ID
+    get:
+      tags:
+      - Misc
+      summary: GET SINGLE  POST (protected route)
+      operationId: GET SINGLE POST
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    put:
+      tags:
+      - Misc
+      summary: EDIT  POST 
+      operationId: EDIT POST
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/EDITPOSTprotectedrouteRequest'
+              - examples:
+                - title: New school music
+                  description: Afro Beats
+                  body: African sound
+              contentMediaType: application/json
+            example:
+              title: New school music
+              description: Afro Beats
+              body: African sound
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    patch:
+      tags:
+      - Misc
+      summary: UPDATE  POST 
+      operationId: UPDATE POST
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UPDATEPOSTprotectedrouteRequest'
+              - examples:
+                - title: New school music
+                  description: Afro Beats
+                  body: African sound
+              contentMediaType: application/json
+            example:
+              title: New school music
+              description: Afro Beats
+              body: African sound
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    delete:
+      tags:
+      - Misc
+      summary: DELETE  POST 
+      operationId: DELETE POST
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    get:
+      tags:
+      - Misc
+      summary: GET SINGLE  POST 
+      operationId: GET SINGLE POST
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+    parameters: []
+components:
+  schemas:
+    NewRequestRequest:
+      title: NewRequestRequest
+      required:
+      - firstName
+      - lastName
+      - email
+      - passWord
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        passWord:
+          type: string
+      examples:
+      - firstName: Andrew
+        lastName: Nonso
+        email: nonso@gmail.com
+        passWord: password
+    REGISTERREQUEST:
+      title: REGISTERREQUEST
+      required:
+      - firstName
+      - lastName
+      - email
+      - passWord
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        passWord:
+          type: string
+      examples:
+      - firstName: Andrew
+        lastName: Nonso
+        email: nonso@gmail.com
+        passWord: password
+    LOGINREQUEST:
+      title: LOGINREQUEST
+      required:
+      - email
+      - passWord
+      type: object
+      properties:
+        email:
+          type: string
+        passWord:
+          type: string
+      examples:
+      - email: nonso@gmail.com
+        passWord: password
+    CREATEPOSTREQUEST:
+      title: CREATEPOSTREQUEST
+      required:
+      - title
+      - description
+      - body
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        body:
+          type: string
+      examples:
+      - title: New school music
+        description: Afro Beats
+        body: African sound
+    EDITPOSTprotectedrouteRequest:
+      title: EDIT POST
+      required:
+      - title
+      - description
+      - body
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        body:
+          type: string
+      examples:
+      - title: New school music
+        description: Afro Beats
+        body: African sound
+    UPDATEPOSTprotectedrouteRequest:
+      title: UPDATEPOSTprotectedrouteRequest
+      required:
+      - title
+      - description
+      - body
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        body:
+          type: string
+      examples:
+      - title: New school music
+        description: Afro Beats
+        body: African sound
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+- name: Misc
+  description: ''
