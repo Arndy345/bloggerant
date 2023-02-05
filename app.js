@@ -10,7 +10,12 @@ const {
 	errorHandler,
 	invalidPathHandler,
 } = require("./middlewares/errorHandlers");
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
 
+const swaggerDocument = YAML.load(
+	"./blog.yaml"
+);
 // Defaults to in-memory store.
 // You can use redis or any other store.
 const limiter = rateLimit({
@@ -35,10 +40,15 @@ app.use("/api/v1", blogRouter);
 app.get("/", (req, res, next) => {
 	res.send(
 		"<h1 style='color: black;text-align: center'>Welcome to <span style='color: green'>Bloggerant</span>!</h1>\
-     <br> <h3 style='color: black;text-align: center'>Click <a href='https://github.com/arndy345/bloggerant' target='_blank'>here</a> to get started</h3>"
+     <br> <h3 style='color: black;text-align: center'>Click <a href='/api-docs'>here</a> to get started</h3>"
 	);
 	next();
 });
+app.use(
+	"/api-docs",
+	swaggerUI.serve,
+	swaggerUI.setup(swaggerDocument)
+);
 app.all("*", invalidPathHandler);
 
 app.use(errorHandler);
