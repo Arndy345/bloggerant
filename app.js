@@ -25,7 +25,7 @@ const limiter = rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-app.use(cors("*"));
+app.use(cors("https://bloggerant.onrender.com/"));
 
 //add secuirty
 app.use(helmet());
