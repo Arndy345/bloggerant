@@ -26,7 +26,6 @@ const limiter = rateLimit({
 });
 
 app.use(cors());
-app.options('*', cors())
 //add secuirty
 app.use(helmet());
 app.use(express.json());
