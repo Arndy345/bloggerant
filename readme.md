@@ -116,7 +116,7 @@ npm run test
 
 ## Base URL
 
-https://better-apron-ox.cyclic.app/](https://bloggerant.onrender.com/api-docs
+https://bloggerant.onrender.com/api-docs
 
 ## APIs
 
